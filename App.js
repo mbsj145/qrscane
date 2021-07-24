@@ -28,16 +28,49 @@ export default class App extends Component {
     .then(data => 
        {
          if (data.length>0 && data !== undefined) {
-          console.log('eeeeeeeeeeeeeeeeee get',data)
-
-          Toast.show({
-            type:'error',
-            position:'top',
-            visibilityTime:2000,
-            text1: 'Hello',
-            text2: 'Barcode Already Registered 👋'
+          if(data[0].Date == newDate && data[0].Barcode == e.data){
+            Toast.show({
+              type:'error',
+              position:'top',
+              visibilityTime:2000,
+              text1: 'Hello',
+              text2: 'Barcode Already Scaned 👋'+ data[0].Date
+            });
+          }else{
+           
+            
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ Barcode:e.data,Date:newDate})
+      };
+        fetch('https://sheet.best/api/sheets/8db1df87-87da-4413-aa68-61d04b340566', requestOptions)
+          .then(response => response.json())
+          .then(dataSave =>  {
+            if (dataSave.length>0) {
+              console.log('eeeeeeeeeeeeeeeeee get new',dataSave)
+              Toast.show({
+                type:'success',
+                position:'top',
+                visibilityTime:2000,
+                text1: 'Hello',
+                text2: 'Barcode Registered 👋'
+              });
+             
+    
+             } else {
+              Toast.show({
+                type:'error',
+                position:'top',
+                visibilityTime:2000,
+                text1: 'Hello',
+                text2: 'Barcode Not Registered 👋'
+              });
+            }
           });
 
+
+          }
          } else {
 
 
